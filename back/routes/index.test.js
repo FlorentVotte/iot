@@ -3,7 +3,7 @@
  */
 const index = require('./index');
 
-let test1 = {'value': 3.0, 'unit': 'C', 'token': 'CwwA2wHDYnHFVwapfSE6qheNiBiPJBbB'};
+let test1 = {'value': 3.0, 'unit': 'C', 'token': 'test'};
 
 test('Test usual value', () => {
     index.addValue(test1, function (status) {
@@ -19,7 +19,7 @@ test("Without sensor's token", () => {
     });
 });
 
-let test3 = {'value': "3A", 'unit': 'C', 'token': 'CwwA2wHDYnHFVwapfSE6qheNiBiPJBbB'};
+let test3 = {'value': "3A", 'unit': 'C', 'token': 'test'};
 
 test("With non float value", () => {
     index.addValue(test3, function (status) {
