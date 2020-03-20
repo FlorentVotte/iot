@@ -1,6 +1,7 @@
 const express = require("express");
 const { client } = require("../db/index.js");
 const router = express.Router();
+const HttpStatus = require('http-status-codes');
 
 /* GET home page. */
 router.get("/", (req, res, next) => {
@@ -14,17 +15,25 @@ router.post("/value", async (req, res, next) => {
 
 async function addValue(value) {
     if (parseFloat(value.value) === value.value) {
-        try {
+
+        const result = await client.query(
+            "SELECT  name FROM sensors WHERE token = $1;",
+            [value.token]
+        );
+
+        if (result.rows.length > 0){
+            const name = result.rows[0].name;
             await client.query(
-                "INSERT INTO values (value, unit, sensor, date) VALUES ($1, $2, (SELECT  name FROM sensors WHERE token = $3), NOW());",
-                [value.value, value.unit, value.token]
+                "INSERT INTO values (value, unit, sensor, date) VALUES ($1, $2, $3, NOW());",
+                [value.value, value.unit, name]
             );
-            return 200;
-        } catch (error) {
-            return 400;
+            return HttpStatus.ACCEPTED;
+        } else {
+            return HttpStatus.BAD_REQUEST;
         }
+
     } else {
-        return 400;
+        return HttpStatus.BAD_REQUEST;
     }
 }
 
