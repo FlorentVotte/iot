@@ -10,9 +10,9 @@ jobs:
       - node/with-cache:
           steps:
             - run: cd back && npm install
-            - run: npm test && cd ..
+            - run: cd back && npm test
             - run: cd client && yarn
-            - run: yarn build && cd ..
+            - run: cd client && yarn build
 workflows:
     build-and-test:
       jobs:
