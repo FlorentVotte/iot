@@ -15,7 +15,7 @@ jobs:
             - run: cd back && npm test
             - run: cd client && yarn
             - run: cd client && yarn build
-      - save-cache:
+      - save_cache:
           key: node-modules-cache-{{ checksum "back/package.json" }}
 workflows:
     build-and-test:
