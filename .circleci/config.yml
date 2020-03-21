@@ -7,12 +7,16 @@ jobs:
       name: node/default
     steps:
       - checkout
+      - restore_cache:
+          key: node-modules-cache-{{ checksum "back/package.json" }}
       - node/with-cache:
           steps:
             - run: cd back && npm install
             - run: cd back && npm test
             - run: cd client && yarn
             - run: cd client && yarn build
+      - save-cache:
+          key: node-modules-cache-{{ checksum "back/package.json" }}
 workflows:
     build-and-test:
       jobs:
