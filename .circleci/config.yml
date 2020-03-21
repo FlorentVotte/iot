@@ -7,11 +7,12 @@ jobs:
       name: node/default
     steps:
       - checkout
-        steps:
-          - run: cd back && npm install
-          - run: cd back && npm test
-          - run: cd client && yarn
-          - run: cd client && yarn build
+      - node:
+          steps:
+            - run: cd back && npm install
+            - run: cd back && npm test
+            - run: cd client && yarn
+            - run: cd client && yarn build
 workflows:
     build-and-test:
       jobs:
