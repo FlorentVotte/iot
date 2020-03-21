@@ -3,9 +3,10 @@
  */
 const index = require('./index');
 const HttpStatus = require('http-status-codes');
+const { closeDB } = require("../db/index.js");
 
 afterAll(() => {
-    index.close();
+    closeDB();
 });
 
 let test1 = {'value': 3.0, 'unit': 'C', 'token': 'test'};

@@ -3,6 +3,7 @@
  */
 const { Client } = require("pg");
 
+
 let url;
 switch (process.env.NODE_ENV){
     case ('development'):
@@ -19,21 +20,29 @@ switch (process.env.NODE_ENV){
         break;
 }
 
-function startBDD() {
-    const client = new Client({
-        connectionString: url
-    });
+const client = new Client({
+    connectionString: url
+});
 
+function startDB() {
     client.connect();
     return client;
 }
 
-function closeBDD(client) {
+function getDB() {
+    if (client._connected) {
+        return client;
+    } else {
+        return startDB();
+    }
+}
+
+function closeDB() {
     client.end();
 }
 
 
 module.exports = {
-    startBDD,
-    closeBDD
+    getDB,
+    closeDB
 };
