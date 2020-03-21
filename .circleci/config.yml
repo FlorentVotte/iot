@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: node-modules-cache-{{ checksum "back/package.json" }}
+          key: node-modules-cache-{{ checksum "back/package-lock.json" }}
       - node/with-cache:
           steps:
             - run: cd back && npm install
@@ -16,7 +16,7 @@ jobs:
             - run: cd client && yarn
             - run: cd client && yarn build
       - save_cache:
-          key: node-modules-cache-{{ checksum "back/package.json" }}
+          key: node-modules-cache-{{ checksum "back/package-lock.json" }}
 workflows:
     build-and-test:
       jobs:
