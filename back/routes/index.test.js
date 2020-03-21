@@ -4,6 +4,10 @@
 const index = require('./index');
 const HttpStatus = require('http-status-codes');
 
+afterAll(() => {
+    index.client.end();
+});
+
 let test1 = {'value': 3.0, 'unit': 'C', 'token': 'test'};
 
 test('Test usual value', async () => {

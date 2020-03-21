@@ -39,5 +39,6 @@ async function addValue(value) {
 
 module.exports = {
     router,
-    addValue
+    addValue,
+    client
 };

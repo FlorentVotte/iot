@@ -7,7 +7,7 @@ jobs:
       name: node/default
     steps:
       - checkout
-      - node/with-cache:
+      - node/default:
           steps:
             - run: cd back && npm install
             - run: cd back && npm test
