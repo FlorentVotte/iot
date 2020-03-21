@@ -9,14 +9,20 @@ jobs:
       - checkout
       - restore_cache:
           key: node-modules-cache-{{ checksum "back/package-lock.json" }}
-      - run: cd back && npm install
-      - run: cd back && npm test
+      - run: cd back && yarn install
+      - run: cd back && yarn test
+      - save_cache:
+                key: node-modules-cache-{{ checksum "back/package-lock.json" }}
+                paths:
+                  - back/node_modules
+      - restore_cache:
+                key: node-modules-cache-{{ checksum "client/yarn.lock" }}
       - run: cd client && yarn
       - run: cd client && yarn build
       - save_cache:
-          key: node-modules-cache-{{ checksum "back/package-lock.json" }}
-          paths:
-            - back/node_modules
+                key: node-modules-cache-{{ checksum "client/yarn.lock" }}
+                paths:
+                  - client/node_modules
 workflows:
     build-and-test:
       jobs:

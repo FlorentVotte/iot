@@ -19,12 +19,21 @@ switch (process.env.NODE_ENV){
         break;
 }
 
-client = new Client({
-    connectionString: url
-});
+function startBDD() {
+    const client = new Client({
+        connectionString: url
+    });
 
-client.connect();
+    client.connect();
+    return client;
+}
+
+function closeBDD(client) {
+    client.end();
+}
+
 
 module.exports = {
-    client
+    startBDD,
+    closeBDD
 };

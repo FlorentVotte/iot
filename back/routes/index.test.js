@@ -5,7 +5,7 @@ const index = require('./index');
 const HttpStatus = require('http-status-codes');
 
 afterAll(() => {
-    index.client.end();
+    index.close();
 });
 
 let test1 = {'value': 3.0, 'unit': 'C', 'token': 'test'};

@@ -1,8 +1,9 @@
 const express = require("express");
-const { client } = require("../db/index.js");
+const { startBDD,
+    closeBDD } = require("../db/index.js");
 const router = express.Router();
 const HttpStatus = require('http-status-codes');
-
+const client = startBDD();
 /* GET home page. */
 router.get("/", (req, res, next) => {
     res.send({ hello: "Hello World!" });
@@ -37,8 +38,12 @@ async function addValue(value) {
     }
 }
 
+function close(){
+    closeBDD(client);
+}
+
 module.exports = {
     router,
     addValue,
-    client
+    close
 };
