@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const { router } = require("./routes/index");
+const cors = require('cors');
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors({origin: '*'}));
 
 app.use("/", router);
 
@@ -29,6 +31,7 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.send({ error: "error" });
+    next();
 });
 
 module.exports = app;
