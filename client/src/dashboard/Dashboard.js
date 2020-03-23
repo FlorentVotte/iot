@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,28 +13,17 @@ import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Florent Votte
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import getValues from './api';
+import Copyright from './Copyright';
 
 const drawerWidth = 240;
-
+const sensorID = 1;
+const refreshDelay = 10000;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -114,16 +103,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard(data, last) {
+export default function Dashboard(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
+  const [open, setOpen] = useState(true);
+  const [data, setData] = useState([{time: undefined, value: undefined}]);
+  const [last, setLast] = useState([undefined, undefined]);
+  const handleDrawerOpen = () => async function () {
+      setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  useEffect(() =>  {
+      async function updateData() {
+          const values = await getValues(sensorID);
+          setData(values);
+          setLast([values[values.length -1].time, values[values.length -1].value]);
+      }
+      updateData();
+      setInterval(function () {
+          updateData();
+      }, refreshDelay);
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -166,13 +168,13 @@ export default function Dashboard(data, last) {
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <Chart />
+                <Chart data={data} />
               </Paper>
             </Grid>
             {/* Recent Value */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Deposits />
+                <Deposits last={last} />
               </Paper>
             </Grid>
           </Grid>

@@ -14,37 +14,30 @@ router.post("/value", async (req, res, next) => {
     res.sendStatus(status);
 });
 
-router.get("/value", async (req, res, next) => {
+router.get("/values", async (req, res, next) => {
     const values = await getValues(req.query.sensor);
-    if (values.length) {
-        res.send(values);
-    } else {
-        res.sendStatus(HttpStatus.BAD_REQUEST);
-    }
+    res.send(values);
 });
 
-router.get("/sensor", async (req, res, next) => {
+router.get("/sensors", async (req, res, next) => {
     const sensors = await getSensors();
-    if (sensors.length) {
-        res.send(sensors);
-    } else {
-        res.sendStatus(HttpStatus.BAD_REQUEST);
-    }
+    res.send(sensors);
 });
 
 async function addValue(value) {
     if (parseFloat(value.value) === value.value) {
 
         const result = await client.query(
-            "SELECT  name FROM sensors WHERE token = $1;",
+            "SELECT id, name FROM sensors WHERE token = $1;",
             [value.token]
         );
 
         if (result.rows.length > 0){
             const name = result.rows[0].name;
+            const sensorid = result.rows[0].id;
             await client.query(
-                "INSERT INTO values (value, unit, sensor, date) VALUES ($1, $2, $3, NOW());",
-                [value.value, value.unit, name]
+                "INSERT INTO values (value, unit, sensor, date, sensorid) VALUES ($1, $2, $3, NOW(), $4);",
+                [value.value, value.unit, name, sensorid]
             );
             return HttpStatus.ACCEPTED;
         } else {
@@ -56,17 +49,17 @@ async function addValue(value) {
     }
 }
 
-async function getValues(sensor) {
+async function getValues(sensorid) {
     const result = await client.query(
-        "SELECT value, date FROM values WHERE sensor = $1 ORDER BY date DESC limit 10;",
-        [sensor]
+        "SELECT value, date FROM values WHERE sensorid = $1 ORDER BY date DESC limit 1000;",
+        [parseInt(sensorid)]
     );
     return result.rows;
 }
 
 async function getSensors() {
     const result = await client.query(
-        "SELECT  name FROM sensors;"
+        "SELECT id, name FROM sensors;"
     );
     return result.rows;
 }
