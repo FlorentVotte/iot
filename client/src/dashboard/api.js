@@ -1,7 +1,7 @@
 /**
  * Created by Florent on 23/03/2020.
  */
-const url = process.env.API_URL || 'http://localhost:9000';
+const url = process.env.API_URL || 'http://api.votte.eu';
 
 export default async function getValues(sensorid) {
     const response = await fetch(url + '/values?sensor=' + sensorid, {
