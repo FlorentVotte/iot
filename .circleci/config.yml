@@ -32,8 +32,7 @@ jobs:
             - "64:23:40:6a:5e:3b:f7:97:fb:d3:49:4b:76:06:78:4a"
       - run:
           name: Deploy over SSH
-          command: |
-            ssh root@51.255.174.48 "cd iot && ./deploy.sh"
+          command: ssh root@51.255.174.48 "cd iot && ./deploy.sh"
 
 workflows:
     build-and-test-and-deploy:
