@@ -23,7 +23,25 @@ jobs:
                 key: node-modules-cache-{{ checksum "client/yarn.lock" }}
                 paths:
                   - client/node_modules
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "64:23:40:6a:5e:3b:f7:97:fb:d3:49:4b:76:06:78:4a"
+      - run:
+          name: Deploy over SSH
+          command: |
+            ssh root@51.255.174.48 "cd iot && ./deploy.sh"
+
 workflows:
-    build-and-test:
+    build-and-test-and-deploy:
       jobs:
         - build-and-test
+        - deploy:
+            requires:
+              - build-and-test
+            filters:
+              branches:
+                only: master
