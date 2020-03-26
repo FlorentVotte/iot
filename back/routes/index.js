@@ -2,7 +2,7 @@ const express = require("express");
 const { getDB } = require("../db/index.js");
 const router = express.Router();
 const HttpStatus = require('http-status-codes');
-
+const jwt           = require('express-jwt');
 const client = getDB();
 
 router.get("/", (req, res, next) => {
@@ -66,5 +66,7 @@ async function getSensors() {
 
 module.exports = {
     router,
-    addValue
+    addValue,
+    getValues,
+    getSensors
 };
