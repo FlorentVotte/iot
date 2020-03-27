@@ -29,7 +29,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "64:23:40:6a:5e:3b:f7:97:fb:d3:49:4b:76:06:78:4a"
+            - "70:51:cf:a0:af:51:af:b2:59:57:82:73:17:70:5e:57"
       - run:
           name: Deploy over SSH
           command: ssh root@51.255.174.48 "cd iot && ./deploy.sh"
