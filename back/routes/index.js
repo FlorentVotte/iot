@@ -15,7 +15,7 @@ router.post("/value", async (req, res, next) => {
 });
 
 router.get("/values", async (req, res, next) => {
-    const values = await getValues(req.query.sensor);
+    const values = await getValues(req.query.sensor, req.query.size);
     res.send(values);
 });
 
@@ -49,10 +49,10 @@ async function addValue(value) {
     }
 }
 
-async function getValues(sensorid) {
+async function getValues(sensorid, size) {
     const result = await client.query(
-        "SELECT value, date FROM values WHERE sensorid = $1 ORDER BY date DESC limit 1000;",
-        [parseInt(sensorid)]
+        "SELECT value, date FROM values WHERE sensorid = $1 ORDER BY date DESC limit $2;",
+        [parseInt(sensorid), size]
     );
     return result.rows;
 }

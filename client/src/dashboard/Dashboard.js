@@ -2,20 +2,13 @@ import React, { useState, useEffect }  from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { mainListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import getValues from './api';
@@ -103,78 +96,57 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//noinspection JSAnnotator
 export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([{time: undefined, value: undefined}]);
   const [last, setLast] = useState([undefined, undefined]);
-  const handleDrawerOpen = () => async function () {
-      setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const [size, setSize] = useState(100);
+  var interval;
+
+    const changeData = (value) => {
+      setSize(parseInt(value));
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
   useEffect(() =>  {
       async function updateData() {
-          const values = await getValues(sensorID);
-          setData(values);
-          setLast([values[values.length -1].time, values[values.length -1].value]);
+        const values = await getValues(sensorID, size);
+        setData(values);
+        setLast([values[values.length -1].time, values[values.length -1].value]);
       }
       updateData();
-      setInterval(function () {
+      clearInterval(interval);
+      interval = setInterval(function () {
           updateData();
-      }, refreshDelay);
-  }, []);
+          }, refreshDelay);
+  }, [size]);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <AppBar position="absolute" className={clsx(classes.appBar, open)}>
         <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+          <Typography component="h1" variant="h6" color="inherit"  className={classes.title}>
             Dashboard Iot
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-      </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
+              {/* Recent Value */}
+              <Grid item xs={12} md={4} lg={3}>
+                  <Paper className={fixedHeightPaper}>
+                      <Deposits last={last} changeData={changeData}/>
+                  </Paper>
+              </Grid>
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
                 <Chart data={data} />
-              </Paper>
-            </Grid>
-            {/* Recent Value */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits last={last} />
               </Paper>
             </Grid>
           </Grid>
