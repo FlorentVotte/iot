@@ -17,7 +17,6 @@ jobs:
       - restore_cache:
                 key: node-modules-cache-{{ checksum "client/yarn.lock" }}
       - run: cd client && yarn
-      - run: cd client && yarn build
       - save_cache:
                 key: node-modules-cache-{{ checksum "client/yarn.lock" }}
                 paths:
