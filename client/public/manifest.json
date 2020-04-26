@@ -10,7 +10,7 @@
     {
       "src": "dashboard256.png",
       "type": "image/png",
-      "sizes": "256x256"
+      "sizes": "192x192 256x256"
     },
     {
       "src": "dashboard512.png",

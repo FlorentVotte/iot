@@ -3,8 +3,9 @@
  */
 const url = process.env.API_URL || 'http://api.votte.eu';
 
-export default async function getValues(sensorid) {
-    const response = await fetch(url + '/values?sensor=' + sensorid, {
+export default async function getValues(sensorid, size) {
+    console.log(url + '/values?sensor=' + sensorid + "&size=" + size);
+    const response = await fetch(url + '/values?sensor=' + sensorid + "&size=" + size, {
         method: "GET",
         headers: {
             'Accept': 'application/json',
@@ -12,7 +13,7 @@ export default async function getValues(sensorid) {
         }
     });
     const json = await response.json();
-    let formated = json.reverse().map(item => createData(formatDate(item.date), item.value));
+    let formated = json.reverse().map(item => createData(formatDate(item.date), item.value-3));
     return formated
 }
 
@@ -22,6 +23,9 @@ function createData(time, value) {
 
 function formatDate(date) {
     const dateObj = new Date(date);
-    return dateObj.getHours() + ':' + dateObj.getMinutes() + ' ' + dateObj.getDate() + '/'
-        + (parseInt(dateObj.getMonth()) + 1) + '/' + dateObj.getFullYear();
+    let h = dateObj.getHours() > 9 ? dateObj.getHours() : '0' + dateObj.getHours();
+    let m = dateObj.getMinutes() > 9 ? dateObj.getMinutes() : '0' + dateObj.getMinutes();
+    let M = (dateObj.getMonth() + 1) > 9 ? (dateObj.getMonth() + 1) : '0' + (dateObj.getMonth() + 1);
+    return h + ':' + m + ' ' + dateObj.getDate() + '/'
+        + M + '/' + dateObj.getFullYear();
 }
