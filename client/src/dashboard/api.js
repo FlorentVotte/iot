@@ -12,7 +12,6 @@ export default async function getValues(sensorid, size) {
         }
     });
     const json = await response.json();
-    console.log(json);
     let formated = json.reverse().map(item => createData(formatDate(item.date), item.value-3));
     return formated
 }
