@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Slider from '@material-ui/core/Slider';
 import Title from './Title';
 
 const useStyles = makeStyles({
@@ -11,9 +12,13 @@ const useStyles = makeStyles({
 });
 
 export default function Deposits(props) {
-  const classes = useStyles();
-  const handleChange = (e) => {
-      props.changeData(parseInt(e.target.value));
+    const [value, setValue] = React.useState(1000);
+      const classes = useStyles();
+      const handleChange = (e, newValue) => {
+          setValue(newValue);
+          console.log(newValue);
+
+         props.changeData(parseInt(newValue));
   };
   return (
     <React.Fragment>
@@ -24,7 +29,7 @@ export default function Deposits(props) {
       <Typography color="textSecondary" className={classes.depositContext}>
         {props.last[0]}
       </Typography>
-      <TextField id="outlined-basic" onChange={handleChange} label="Nb of datas" variant="outlined" />
+      <Slider value={value} onChange={handleChange} aria-labelledby="continuous-slider" valueLabelDisplay="auto" min={10} max={10000} />
     </React.Fragment>
   );
 }
