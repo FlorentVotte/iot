@@ -4,7 +4,6 @@
 const url = process.env.API_URL || 'http://api.votte.eu';
 
 export default async function getValues(sensorid, size) {
-    console.log(url + '/values?sensor=' + sensorid + "&size=" + size);
     const response = await fetch(url + '/values?sensor=' + sensorid + "&size=" + size, {
         method: "GET",
         headers: {
@@ -13,6 +12,7 @@ export default async function getValues(sensorid, size) {
         }
     });
     const json = await response.json();
+    console.log(json);
     let formated = json.reverse().map(item => createData(formatDate(item.date), item.value-3));
     return formated
 }

@@ -16,7 +16,7 @@ import Copyright from './Copyright';
 
 const drawerWidth = 240;
 const sensorID = 1;
-const refreshDelay = 10000;
+const refreshDelay = 1000;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -103,7 +103,6 @@ export default function Dashboard(props) {
   const [data, setData] = useState([{time: undefined, value: undefined}]);
   const [last, setLast] = useState([undefined, undefined]);
   const [size, setSize] = useState(100);
-  var interval;
 
     const changeData = (value) => {
       setSize(parseInt(value));
@@ -113,14 +112,17 @@ export default function Dashboard(props) {
   useEffect(() =>  {
       async function updateData() {
         const values = await getValues(sensorID, size);
+        console.log(values);
         setData(values);
         setLast([values[values.length -1].time, values[values.length -1].value]);
       }
       updateData();
-      clearInterval(interval);
-      interval = setInterval(function () {
+      var interval = setInterval(function () {
           updateData();
           }, refreshDelay);
+      for (let i=1; i < interval; i++){
+          clearInterval(i);
+      }
   }, [size]);
 
   return (

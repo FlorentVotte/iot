@@ -15,7 +15,9 @@ router.post("/value", async (req, res, next) => {
 });
 
 router.get("/values", async (req, res, next) => {
-    const values = await getValues(req.query.sensor, req.query.size);
+    const sensorid = String(req.query.sensor);
+    const size = String(req.query.size);
+    const values = await getValues(sensorid, size);
     res.send(values);
 });
 
