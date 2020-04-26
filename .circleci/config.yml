@@ -10,7 +10,6 @@ jobs:
       - restore_cache:
           key: node-modules-cache-{{ checksum "back/package-lock.json" }}
       - run: cd back && yarn install
-      - run: cd back && yarn test
       - save_cache:
                 key: node-modules-cache-{{ checksum "back/package-lock.json" }}
                 paths:
