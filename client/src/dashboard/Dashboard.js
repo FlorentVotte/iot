@@ -103,8 +103,9 @@ export default function Dashboard(props) {
   const [data, setData] = useState([{time: undefined, value: undefined}]);
   const [last, setLast] = useState([undefined, undefined]);
   const [size, setSize] = useState(100);
+  var interval;
 
-  const changeData = (value) => {
+    const changeData = (value) => {
       setSize(parseInt(value));
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -116,6 +117,10 @@ export default function Dashboard(props) {
         setLast([values[values.length -1].time, values[values.length -1].value]);
       }
       updateData();
+      clearInterval(interval);
+      interval = setInterval(function () {
+          updateData();
+          }, refreshDelay);
   }, [size]);
 
   return (
