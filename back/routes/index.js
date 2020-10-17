@@ -56,7 +56,28 @@ async function getValues(sensorid, size) {
         "SELECT value, date FROM values WHERE sensorid = $1 ORDER BY date DESC limit $2;",
         [parseInt(sensorid), size]
     );
-    return result.rows;
+
+    let data = result.rows;
+    let n = data.size();
+    let new_data = [data[0]];
+
+    let step = n / 1000;
+
+    if (step > 1){
+        for (let i = 1; i < n; i++) {
+            if (i%step === 0){
+                let temp = new_data.pop();
+                new_data.push(temp / 10);
+                new_data.push(data[i])
+            } else {
+                let temp = new_data.pop();
+                new_data.push(temp + data[i])
+            }
+        }
+        return new_data;
+    }
+
+    return data;
 }
 
 async function getSensors() {
