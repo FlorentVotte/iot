@@ -68,10 +68,10 @@ async function getValues(sensorid, size) {
             if (i%step === 0){
                 let temp = new_data.pop();
                 new_data.push(temp / 10);
-                new_data.push(data[i])
+                new_data.push(data[i]);
             } else {
                 let temp = new_data.pop();
-                new_data.push(temp + data[i])
+                new_data.push(temp + data[i]);
             }
         }
         return new_data;
