@@ -59,21 +59,24 @@ async function getValues(sensorid, size) {
 
     let data = result.rows;
     let n = data.length;
-    let new_data = [data[0]];
 
-    let step = n / 1000;
+    let step = Math.floor(n / 1000);
 
     if (step > 1){
+        let new_data = [data[0]];
         for (let i = 1; i < n; i++) {
             if (i%step === 0){
                 let temp = new_data.pop();
-                new_data.push(temp / 10);
+                temp['value'] = temp['value'] / step;
+                new_data.push(temp);
                 new_data.push(data[i]);
             } else {
                 let temp = new_data.pop();
-                new_data.push(temp + data[i]);
+                temp['value'] = temp['value'] + data[i]['value'];
+                new_data.push(temp);
             }
         }
+        console.log(new_data.length);
         return new_data;
     }
 
