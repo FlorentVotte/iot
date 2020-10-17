@@ -67,7 +67,7 @@ async function getValues(sensorid, size) {
         for (let i = 1; i < n; i++) {
             if (i%step === 0){
                 let temp = new_data.pop();
-                temp['value'] = temp['value'] / step;
+                temp['value'] = Math.round((temp['value'] / step) * 100) / 100;
                 new_data.push(temp);
                 new_data.push(data[i]);
             } else {
