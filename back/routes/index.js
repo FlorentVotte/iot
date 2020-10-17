@@ -60,7 +60,7 @@ async function getValues(sensorid, size) {
     let data = result.rows;
     let n = data.length;
 
-    let step = Math.floor(n / 1000);
+    let step = Math.floor(n / 500);
 
     if (step > 1){
         let new_data = [data[0]];
