@@ -76,6 +76,7 @@ async function getValues(sensorid, size) {
                 new_data.push(temp);
             }
         }
+        new_data.pop();
         console.log(new_data.length);
         return new_data;
     }
